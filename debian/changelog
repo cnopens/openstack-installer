@@ -1,8 +1,9 @@
-openstack (0.22.1-0ubuntu1~14.04.1~test1) UNRELEASED; urgency=medium
+openstack (0.22.2-0ubuntu1~15.04.1~test1) vivid; urgency=medium
 
   * Update charm revisions
+  * Update Landscape Autopilot version
 
- -- Adam Stokes <adam.stokes@ubuntu.com>  Fri, 20 Feb 2015 11:15:59 -0500
+ -- Adam Stokes <adam.stokes@ubuntu.com>  Tue, 31 Mar 2015 14:22:06 -0400
 
 openstack (0.22-0ubuntu1~15.04) vivid; urgency=medium
 
