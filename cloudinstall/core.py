@@ -1,4 +1,4 @@
-# Copyright 2015 Canonical, Ltd.
+# Copyright 2014, 2015 Canonical, Ltd.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -24,7 +24,7 @@ from os import path, getenv
 from operator import attrgetter
 
 from cloudinstall import utils
-from cloudinstall.state import ControllerState
+from cloudinstall.state import ControllerState, StateManager
 from cloudinstall.juju import JujuState
 from cloudinstall.maas import (connect_to_maas, FakeMaasState,
                                MaasMachineStatus)
@@ -61,6 +61,8 @@ class Controller:
     def __init__(self, ui, config, loop):
         self.ui = ui
         self.config = config
+        self.state = StateManager(
+            path.join(self.config.cfg_path, 'state.yaml'))
         self.loop = loop
         self.juju_state = None
         self.juju = None
@@ -70,7 +72,7 @@ class Controller:
         self.juju_m_idmap = None  # for single, {instance_id: machine id}
         self.deployed_charm_classes = []
         self.placement_controller = None
-        self.config.setopt('current_state', ControllerState.INSTALL_WAIT.value)
+        self.state.setopt('current_state', ControllerState.INSTALL_WAIT.value)
 
     def update(self, *args, **kwargs):
         """Render UI according to current state and reset timer
@@ -78,12 +80,12 @@ class Controller:
         PegasusGUI only.
         """
         interval = 1
-        if self.config.getopt('current_state') == ControllerState.PLACEMENT:
+        if self.state.getopt('current_state') == ControllerState.PLACEMENT:
             self.ui.render_placement_view(self.placement_controller,
                                           self.loop,
                                           self.config,
                                           self.commit_placement)
-        elif self.config.getopt('current_state') == \
+        elif self.state.getopt('current_state') == \
                 ControllerState.INSTALL_WAIT:
             self.ui.render_node_install_wait(message="Waiting...")
             interval = self.config.node_install_wait_interval
@@ -179,7 +181,7 @@ class Controller:
 
         if self.config.getopt('edit_placement') or \
            not self.placement_controller.can_deploy():
-            self.config.setopt(
+            self.state.setopt(
                 'current_state', ControllerState.PLACEMENT.value)
         else:
             if self.config.getopt('headless'):
@@ -220,7 +222,7 @@ class Controller:
         self.initialize()
 
     def commit_placement(self):
-        self.config.setopt('current_state', ControllerState.SERVICES.value)
+        self.state.setopt('current_state', ControllerState.SERVICES.value)
         self.ui.render_services_view(self.nodes, self.juju_state,
                                      self.maas_state, self.config)
         self.loop.redraw_screen()
@@ -264,7 +266,7 @@ class Controller:
 
             time.sleep(1)
 
-        self.config.setopt('current_state', ControllerState.SERVICES.value)
+        self.state.setopt('current_state', ControllerState.SERVICES.value)
         if self.config.is_single():
             controller_machine = self.juju_m_idmap['controller']
             self.configure_lxc_network(controller_machine)

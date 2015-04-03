@@ -1,5 +1,4 @@
-#
-# Copyright 2014 Canonical, Ltd.
+# Copyright 2014, 2015 Canonical, Ltd.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -29,7 +28,7 @@ import yaml
 from subprocess import check_output
 from tempfile import TemporaryDirectory
 
-from cloudinstall.state import InstallState
+from cloudinstall.state import InstallState, StateManager
 from cloudinstall.netutils import (get_ip_addr, get_bcast_addr, get_network,
                                    get_default_gateway, get_netmask,
                                    get_network_interfaces, get_ip_set,
@@ -73,6 +72,8 @@ class MultiInstall:
                  config, post_tasks=None):
         self.loop = loop
         self.config = config
+        self.state = StateManager(
+            os.path.join(config.cfg_path, 'state.yaml'))
         self.display_controller = display_controller
         self.tasker = self.display_controller.tasker(loop, config)
         self.tempdir = TemporaryDirectory(suffix="cloud-install")
@@ -101,7 +102,7 @@ class MultiInstall:
 
     def do_install(self):
         self.tasker.start_task("Bootstrapping Juju")
-        self.config.setopt('current_state', InstallState.RUNNING.value)
+        self.state.setopt('current_state', InstallState.RUNNING.value)
 
         maas_creds = self.config.getopt('maascreds')
         maas_env = utils.load_template('juju-env/maas.yaml')
@@ -271,7 +272,7 @@ class MultiInstallExistingMaas(MultiInstall):
             msg = "Waiting for sufficient resources in MAAS"
             self.display_controller.status_info_message(msg)
             self.display_controller.current_installer = self
-            self.config.setopt('current_state', InstallState.NODE_WAIT.value)
+            self.state.setopt('current_state', InstallState.NODE_WAIT.value)
             # return here and end thread. machine_wait_view will call
             # do_install back on new async thread
         else:

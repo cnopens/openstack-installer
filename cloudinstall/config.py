@@ -37,7 +37,44 @@ class ConfigException(Exception):
     pass
 
 
-class Config:
+class ConfigBase:
+
+    """ Base config class to expose a few common methods
+    """
+
+    def __init__(self, config_dict, config_file):
+        self.config = config_dict
+        self.config_file = config_file
+
+    def setopt(self, key, val):
+        """ sets config option """
+        try:
+            self.config[key] = val
+            self.save()
+        except Exception as e:
+            log.error("Failed to set {} in config: {}".format(key, e))
+
+    def getopt(self, key):
+        if key in self.config:
+            return self.config[key]
+        else:
+            if hasattr(self, key):
+                attr = getattr(self, key)
+                return attr() if callable(attr) else attr
+            return False
+
+    def save(self):
+        """ Saves state """
+        try:
+            utils.spew(self.config_file,
+                       yaml.safe_dump(self.config,
+                                      default_flow_style=False))
+        except IOError:
+            raise ConfigException(
+                "Unable to save configuration.")
+
+
+class Config(ConfigBase):
     STYLES = [
         ('body', 'white', 'black'),
         ('header_menu', 'light gray', 'dark gray'),
@@ -83,15 +120,13 @@ class Config:
             self._config = {}
         else:
             self._config = cfg_obj
-        self._cfg_file = cfg_file
 
-    def save(self):
-        """ Saves configuration """
-        try:
-            utils.spew(self.cfg_file,
-                       yaml.safe_dump(self._config, default_flow_style=False))
-        except IOError:
-            raise ConfigException("Unable to save configuration.")
+        if cfg_file is None:
+            self.cfg_file = os.path.join(self.cfg_path, 'config.yaml')
+        else:
+            self.cfg_file = cfg_file
+
+        super().__init__(self._config, self.cfg_file)
 
     def install_types(self):
         """ Installer types
@@ -121,13 +156,6 @@ class Config:
         return os.path.join(utils.install_home(), '.cloud-install')
 
     @property
-    def cfg_file(self):
-        if self._cfg_file is None:
-            return os.path.join(self.cfg_path, 'config.yaml')
-        else:
-            return self._cfg_file
-
-    @property
     def bin_path(self):
         """ scripts located in non-default system path """
         return os.path.join(self.share_path, "bin")
@@ -153,23 +181,6 @@ class Config:
            'Landscape OpenStack Autopilot' in self.getopt('install_type'):
             return True
         return False
-
-    def setopt(self, key, val):
-        """ sets config option """
-        try:
-            self._config[key] = val
-            self.save()
-        except Exception as e:
-            log.error("Failed to set {} in config: {}".format(key, e))
-
-    def getopt(self, key):
-        if key in self._config:
-            return self._config[key]
-        else:
-            if hasattr(self, key):
-                attr = getattr(self, key)
-                return attr() if callable(attr) else attr
-            return False
 
     def juju_path(self):
         """ Returns path where juju environments reside """

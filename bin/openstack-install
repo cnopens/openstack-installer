@@ -29,7 +29,7 @@ import cloudinstall.utils as utils
 from cloudinstall.gui import PegasusGUI, InstallHeader
 from cloudinstall.consoleui import ConsoleUI
 from cloudinstall.install import InstallController
-from cloudinstall.config import Config
+from cloudinstall.config import Config, StateManager
 from cloudinstall.ev import EventLoop
 from cloudinstall import __version__ as version
 
@@ -67,6 +67,10 @@ def parse_options(argv):
     parser.add_argument('-g', '--get-config', type=str, dest='get_config',
                         default=None,
                         help="with arg <key>, prints config value for 'key' "
+                        "to stdout and exits.")
+    parser.add_argument('--get-state', type=str, dest='get_state',
+                        default=None,
+                        help="with arg <key>, prints state value for 'key' "
                         "to stdout and exits.")
     parser.add_argument('-k', '--killcloud', action='store_true',
                         dest='killcloud',
@@ -125,6 +129,7 @@ def parse_options(argv):
 if __name__ == '__main__':
     opts = parse_options(sys.argv[1:])
     cfg = Config(utils.populate_config(opts))
+    state = StateManager(os.path.join(cfg.cfg_path, 'state.yaml'))
 
     if sys.getdefaultencoding() != 'utf-8':
         print("Ubuntu OpenStack Installer requires unicode support. "
@@ -173,9 +178,9 @@ if __name__ == '__main__':
         utils.chown(
             cfg.juju_path(), utils.install_user(), utils.install_user())
 
-    if not cfg.getopt('container_name'):
-        cfg.setopt('container_name',
-                   'openstack-single-{}'.format(utils.install_user()))
+    if not state.getopt('container_name'):
+        state.setopt('container_name',
+                     'openstack-single-{}'.format(utils.install_user()))
 
     if any([cfg.getopt(flag) for flag in ['uninstall', 'killcloud',
                                           'killcloud_noprompt']]):

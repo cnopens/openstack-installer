@@ -1,5 +1,4 @@
-#
-# Copyright 2014 Canonical, Ltd.
+# Copyright 2014, 2015 Canonical, Ltd.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,7 +19,7 @@ import os
 from cloudinstall.config import (INSTALL_TYPE_SINGLE,
                                  INSTALL_TYPE_MULTI,
                                  INSTALL_TYPE_LANDSCAPE)
-from cloudinstall.state import InstallState
+from cloudinstall.state import InstallState, StateManager
 from cloudinstall.single_install import SingleInstall
 from cloudinstall.landscape_install import LandscapeInstall
 from cloudinstall.multi_install import (MultiInstallNewMaas,
@@ -45,7 +44,9 @@ class InstallController:
         self.ui = ui
         self.config = config
         self.loop = loop
-        self.config.setopt('current_state', InstallState.RUNNING.value)
+        self.state = StateManager(
+            os.path.join(config.cfg_path, 'state.yaml'))
+        self.state.setopt('current_state', InstallState.RUNNING.value)
         if not self.config.getopt('headless'):
             if self.config.getopt('openstack_release') == 'icehouse':
                 self.ui.set_openstack_rel("Icehouse (2014.1.3)")

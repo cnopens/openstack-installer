@@ -1,6 +1,3 @@
-#
-# charms.py - Charm instructions to Cloud Installer
-#
 # Copyright 2014, 2015 Canonical, Ltd.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -26,6 +23,7 @@ import requests
 
 from macumba import MacumbaError, ServerError
 from cloudinstall import utils
+from cloudinstall.state import StateManager
 from cloudinstall.placement.controller import AssignmentType
 
 log = logging.getLogger('cloudinstall.charms')
@@ -276,6 +274,7 @@ class CharmQueue:
         self.is_running = False
         self.ui = ui
         self.config = config
+        self.state = StateManager(path.join(config.cfg_path, 'state.yaml'))
         self.juju = juju
         self.juju_state = juju_state
         if deployed_charms is None:
@@ -398,4 +397,4 @@ class CharmQueue:
                 log.exception(msg)
                 self.ui.status_error_message(msg)
             time.sleep(10)
-        self.config.setopt('deploy_complete', True)
+        self.state.setopt('deploy_complete', True)

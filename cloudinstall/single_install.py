@@ -1,5 +1,4 @@
-#
-# Copyright 2014 Canonical, Ltd.
+# Copyright 2014, 2015 Canonical, Ltd.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -21,6 +20,7 @@ import json
 import time
 import shutil
 from cloudinstall import utils, netutils
+from cloudinstall.state import StateManager
 
 
 log = logging.getLogger('cloudinstall.single_install')
@@ -35,6 +35,7 @@ class SingleInstall:
     def __init__(self, loop, display_controller, config):
         self.display_controller = display_controller
         self.config = config
+        self.state = StateManager(os.path.join(config.cfg_path, 'state.yaml'))
         self.loop = loop
         self.tasker = self.display_controller.tasker(loop, config)
         username = utils.install_user()
@@ -115,7 +116,7 @@ class SingleInstall:
                                                   'rootfs/etc/default/lxc-net')
 
         network = netutils.get_unique_lxc_network()
-        self.config.setopt('lxc_network', network)
+        self.state.setopt('lxc_network', network)
 
         nw = IPv4Network(network)
         addr = nw[1]
@@ -138,7 +139,7 @@ class SingleInstall:
         """
         # Store container IP in config
         ip = utils.container_ip(self.container_name)
-        self.config.setopt('container_ip', ip)
+        self.state.setopt('container_ip', ip)
 
         log.info("Adding static route for {} via {}".format(lxc_net,
                                                             ip))
