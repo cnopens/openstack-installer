@@ -1,3 +1,9 @@
+openstack (0.22.3-0ubuntu1~14.04.1~test1) trusty; urgency=medium
+
+  * Use latest bundle for Landscape Autopilot on each deploy
+
+ -- Adam Stokes <adam.stokes@ubuntu.com>  Fri, 03 Apr 2015 22:03:20 -0400
+
 openstack (0.22.2-0ubuntu1~15.04.1~test1) vivid; urgency=medium
 
   * Update charm revisions
