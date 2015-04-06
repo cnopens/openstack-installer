@@ -115,9 +115,6 @@ def populate_config(opts):
 
     :param opts: argparse Namespace class of options
     """
-    cfg_cli_opts = vars(opts)
-    cfg = {}
-
     def sanitize_config_items(_cfg):
         """ remove false and null items """
         return {k: v for (k, v) in _cfg.items()
@@ -133,28 +130,17 @@ def populate_config(opts):
                                                               main_name))
             main[nk] = nv
 
-    if 'config_file' not in cfg_cli_opts:
-        # Check for a pre-existing install config
-        presaved_config = os.path.join(
-            install_home(), '.cloud-install/config.yaml')
-        if os.path.exists(presaved_config):
-            cfg.update(yaml.load(slurp(presaved_config)))
-        scrub = sanitize_config_items(cfg_cli_opts)
-        verbose_update(cfg, 'pre-existing config file',
-                       scrub, 'command-line options')
-        return cfg
-
-    # Always override presaved config if defined in cli switch
-    elif 'config_file' in cfg_cli_opts:
-        _cfg_copy = merge_dicts(cfg,
-                                yaml.load(
-                                    slurp(cfg_cli_opts['config_file'])))
-        scrub = sanitize_config_items(cfg_cli_opts)
-        verbose_update(_cfg_copy,
+    cfg_cli_opts = vars(opts)
+    cfg = {}
+    if 'config_file' in cfg_cli_opts:
+        cfg = merge_dicts(yaml.load(slurp(cfg_cli_opts['config_file'])),
+                          cfg_cli_opts)
+        scrub = sanitize_config_items(cfg)
+        verbose_update(cfg,
                        "contents of --config-file: "
                        "'{}'".format(cfg_cli_opts['config_file']),
                        scrub, 'command-line options')
-        return _cfg_copy
+        return cfg
     else:
         return sanitize_config_items(cfg_cli_opts)
 
@@ -237,7 +223,6 @@ def merge_dicts(*dicts):
     keys = set()
     for d in dicts:
         keys = keys.union(set(d))
-
     for key in keys:
         values = [d[key] for d in dicts if key in d]
         # which ones are mapping types? (aka dict)

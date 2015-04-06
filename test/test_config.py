@@ -44,10 +44,10 @@ def parse_opts(argv):
                         dest='killcloud')
     parser.add_argument('--killcloud-noprompt', action='store_true',
                         dest='killcloud_noprompt')
-    parser.add_argument('--openstack-release', default=None,
+    parser.add_argument('--openstack-release', default="juno",
                         dest='openstack_release')
-    parser.add_argument('-a', type=str, default=None)
-    parser.add_argument('-r', type=str, default=None, dest='release')
+    parser.add_argument('-a', dest='arch', default=None)
+    parser.add_argument('-r', dest='release', default=None)
     parser.add_argument('-p', '--placement', action='store_true',
                         dest='edit_placement')
     parser.add_argument('--extra-ppa', nargs='+', dest='extra_ppa')
@@ -56,6 +56,11 @@ def parse_opts(argv):
     parser.add_argument('--https-proxy', dest='https_proxy')
     parser.add_argument('--headless', action='store_true',
                         dest='headless')
+    parser.add_argument('--storage', dest='storage_backend',
+                        default='none',
+                        choices=['swift', 'ceph', 'none'],
+                        help="Choose storage backend to deploy initially. "
+                        "[choices: swift, ceph]")
     return parser.parse_args(argv)
 
 
@@ -121,7 +126,8 @@ class TestGoodConfig(unittest.TestCase):
         """
         cfg_file = path.join(DATA_DIR, 'good_config.yaml')
         cfg = utils.populate_config(parse_opts(['--config', cfg_file]))
-        self.assertEqual(True, 'http-proxy' not in cfg)
+        print(cfg)
+        self.assertEqual(True, 'http_proxy' not in cfg)
 
     def test_config_file_persists(self):
         """ CLI options override options in config file
@@ -130,6 +136,7 @@ class TestGoodConfig(unittest.TestCase):
         cfg = utils.populate_config(
             parse_opts(['--config', cfg_file,
                         '--headless']))
+        print(cfg)
         self.assertEqual(True, cfg['headless'])
 
     def test_config_file_persists_new_cli_opts(self):
@@ -141,6 +148,7 @@ class TestGoodConfig(unittest.TestCase):
             parse_opts(['--config', cfg_file,
                         '--install-only',
                         '--killcloud-noprompt']))
+        print(cfg)
         self.assertEqual(True, cfg['install_only'])
         self.assertEqual(True, cfg['killcloud_noprompt'])
 
@@ -154,6 +162,7 @@ class TestGoodConfig(unittest.TestCase):
                         'http://localhost:2222',
                         '--killcloud-noprompt',
                         '--config', cfg_file]))
+        print(cfg)
         self.assertEqual(cfg['https_proxy'], GOOD_CONFIG['https_proxy'])
 
     def test_default_opts_not_override_config(self):
@@ -175,8 +184,28 @@ class TestGoodConfig(unittest.TestCase):
         in the config object
         """
         cfg = utils.populate_config(parse_opts([]))
-        print(cfg)
         self.assertEqual(True, 'headless' not in cfg)
+
+    def test_storage_from_cli_persists(self):
+        """ Verify that passing --storage (option) persists
+        within config object
+        """
+        cfg_file = path.join(DATA_DIR, 'good_config.yaml')
+        cfg = utils.populate_config(
+            parse_opts(['--storage', 'ceph',
+                        '--config', cfg_file]))
+        print(cfg)
+        self.assertEqual('ceph', cfg['storage_backend'])
+
+    def test_storage_from_config_persists(self):
+        """ Verify that setting storage_backend persists
+        within config object
+        """
+        cfg_file = path.join(DATA_DIR, 'good_config.yaml')
+        cfg = utils.populate_config(
+            parse_opts(['--config', cfg_file]))
+        print(cfg)
+        self.assertEqual('swift', cfg['storage_backend'])
 
 
 @unittest.skip
