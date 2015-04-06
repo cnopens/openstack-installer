@@ -56,11 +56,6 @@ def parse_opts(argv):
     parser.add_argument('--https-proxy', dest='https_proxy')
     parser.add_argument('--headless', action='store_true',
                         dest='headless')
-    parser.add_argument('--storage', dest='storage_backend',
-                        default='none',
-                        choices=['swift', 'ceph', 'none'],
-                        help="Choose storage backend to deploy initially. "
-                        "[choices: swift, ceph]")
     return parser.parse_args(argv)
 
 
@@ -185,27 +180,6 @@ class TestGoodConfig(unittest.TestCase):
         """
         cfg = utils.populate_config(parse_opts([]))
         self.assertEqual(True, 'headless' not in cfg)
-
-    def test_storage_from_cli_persists(self):
-        """ Verify that passing --storage (option) persists
-        within config object
-        """
-        cfg_file = path.join(DATA_DIR, 'good_config.yaml')
-        cfg = utils.populate_config(
-            parse_opts(['--storage', 'ceph',
-                        '--config', cfg_file]))
-        print(cfg)
-        self.assertEqual('ceph', cfg['storage_backend'])
-
-    def test_storage_from_config_persists(self):
-        """ Verify that setting storage_backend persists
-        within config object
-        """
-        cfg_file = path.join(DATA_DIR, 'good_config.yaml')
-        cfg = utils.populate_config(
-            parse_opts(['--config', cfg_file]))
-        print(cfg)
-        self.assertEqual('swift', cfg['storage_backend'])
 
 
 @unittest.skip
