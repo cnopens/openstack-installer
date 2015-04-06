@@ -1,14 +1,9 @@
 language: python
 python:
-  - 3.4
+  - "3.4"
 notifications:
   email: false
-  webooks:
-    - http://cypherbook.com:8080/hubot/travis
 install:
-  - "pip install -r requirements.txt --use-mirrors"
-  - "pip install coveralls"
-  - "python setup.py install"
-script: make ci-test
-after_success:
-  coveralls
+  - travis_retry pip install tox
+script:
+  - travis_retry tox

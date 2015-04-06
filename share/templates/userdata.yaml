@@ -29,7 +29,7 @@ apt_get_wrapper:
   command: eatmydata
   enabled: auto
 apt_sources:
-  - source: deb http://ppa.launchpad.net/cloud-installer/testing/ubuntu $RELEASE main
+  - source: deb http://ppa.launchpad.net/cloud-installer/stable/ubuntu $RELEASE main
     key: |
       -----BEGIN PGP PUBLIC KEY BLOCK-----
       Version: SKS 1.1.4
