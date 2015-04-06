@@ -88,8 +88,15 @@ class Config:
     def save(self):
         """ Saves configuration """
         try:
-            utils.spew(self.cfg_file,
-                       yaml.safe_dump(self._config, default_flow_style=False))
+            heading = ("# This file is an auto generated configuration.\n"
+                       "# It will not be read by subsequent runs.\n"
+                       "# To re-use this config, make a copy\n"
+                       "# of this file and pass that file's name to the "
+                       "# --config flag.")
+            body = "{}\n{}".format(heading,
+                                   yaml.safe_dump(self._config,
+                                                  default_flow_style=False))
+            utils.spew(self.cfg_file, body)
         except IOError:
             raise ConfigException("Unable to save configuration.")
 
