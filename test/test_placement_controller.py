@@ -2,7 +2,7 @@
 #
 # tests placement/controller.py
 #
-# Copyright 2014 Canonical, Ltd.
+# Copyright 2014, 2015 Canonical, Ltd.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -30,7 +30,6 @@ from cloudinstall.charms.swift import CharmSwift
 from cloudinstall.charms.swift_proxy import CharmSwiftProxy
 from cloudinstall.charms.ceph import CharmCeph
 from cloudinstall.charms.ceph_osd import CharmCephOSD
-from cloudinstall.charms.ceph_radosgw import CharmCephRadosGw
 from cloudinstall.maas import MaasMachineStatus
 from cloudinstall.config import Config
 from cloudinstall.state import CharmState
@@ -260,11 +259,6 @@ class PlacementControllerTestCase(unittest.TestCase):
 
     def test_swift_unrequired_then_required_swift_backend(self):
         "Swift and swift-proxy are not optional with swift as the backend."
-        self.conf.setopt('storage_backend', 'swift')
-        self.assertEqual(CharmState.REQUIRED,
-                         self.pc.get_charm_state(CharmSwift)[0])
-        self.assertEqual(CharmState.REQUIRED,
-                         self.pc.get_charm_state(CharmSwiftProxy)[0])
         self.pc.assign(self.mock_machine, CharmSwift, AssignmentType.LXC)
         self.assertEqual(CharmState.REQUIRED,
                          self.pc.get_charm_state(CharmSwift)[0])
@@ -288,11 +282,6 @@ class PlacementControllerTestCase(unittest.TestCase):
 
     def test_swift_proxy_unrequired_then_required_swift_backend(self):
         "Swift and swift-proxy are not optional with swift as the backend"
-        self.conf.setopt('storage_backend', 'swift')
-        self.assertEqual(CharmState.REQUIRED,
-                         self.pc.get_charm_state(CharmSwift)[0])
-        self.assertEqual(CharmState.REQUIRED,
-                         self.pc.get_charm_state(CharmSwiftProxy)[0])
         self.pc.assign(self.mock_machine, CharmSwiftProxy, AssignmentType.LXC)
         self.assertEqual(CharmState.REQUIRED,
                          self.pc.get_charm_state(CharmSwift)[0])
@@ -305,40 +294,6 @@ class PlacementControllerTestCase(unittest.TestCase):
         # default is 'none'
         self.assertEqual(CharmState.OPTIONAL,
                          self.pc.get_charm_state(CharmCeph)[0])
-        self.assertEqual(CharmState.OPTIONAL,
-                         self.pc.get_charm_state(CharmCephOSD)[0])
-        self.assertEqual(CharmState.OPTIONAL,
-                         self.pc.get_charm_state(CharmSwift)[0])
-        self.assertEqual(CharmState.OPTIONAL,
-                         self.pc.get_charm_state(CharmSwiftProxy)[0])
-
-        self.conf.setopt('storage_backend', 'swift')
-        self.assertEqual(CharmState.OPTIONAL,
-                         self.pc.get_charm_state(CharmCeph)[0])
-        self.assertEqual(CharmState.OPTIONAL,
-                         self.pc.get_charm_state(CharmCephOSD)[0])
-        self.assertEqual(CharmState.CONFLICTED,
-                         self.pc.get_charm_state(CharmCephRadosGw)[0])
-
-        st = self.pc.get_charm_state(CharmSwift)
-        swift_state, swift_cons, swift_deps = st
-        self.assertEqual(CharmState.REQUIRED, swift_state)
-
-        st = self.pc.get_charm_state(CharmSwiftProxy)
-        swp_state, swp_cons, swp_deps = st
-        self.assertEqual(CharmState.REQUIRED, swp_state)
-        self.assertEqual([], swp_cons)
-
-        ceph_state, ceph_cons, ceph_deps = self.pc.get_charm_state(CharmCeph)
-        self.assertEqual(CharmState.OPTIONAL, ceph_state)
-
-        st = self.pc.get_charm_state(CharmCephRadosGw)
-        ceph_rg_state, ceph_rg_cons, ceph_rg_deps = st
-        self.assertEqual(CharmState.CONFLICTED, ceph_rg_state)
-
-        self.conf.setopt('storage_backend', 'ceph')
-        ceph_state, ceph_cons, ceph_deps = self.pc.get_charm_state(CharmCeph)
-        self.assertEqual(CharmState.REQUIRED, ceph_state)
         self.assertEqual(CharmState.OPTIONAL,
                          self.pc.get_charm_state(CharmCephOSD)[0])
         self.assertEqual(CharmState.OPTIONAL,
@@ -475,38 +430,3 @@ class PlacementControllerTestCase(unittest.TestCase):
         # not affect machines used for defaults
         self.assertEqual(mock_maas_state.machines.mock_calls[0],
                          call(MaasMachineStatus.READY))
-
-    def test_gen_single_backends(self):
-        "gen_single has no storage backend by default"
-
-        def find_charm(cn, defs):
-            allcharms = []
-            for mname, ad in defs.items():
-                for atype, charmclasses in ad.items():
-                    allcharms += charmclasses
-            return cn in allcharms
-
-        c = Config()
-        pc = PlacementController(config=c)
-
-        # default storage_backend is 'none'
-        c.setopt('storage_backend', 'none')
-        defaults = pc.gen_single()
-        self.assertFalse(find_charm(CharmSwiftProxy, defaults))
-        self.assertFalse(find_charm(CharmSwift, defaults))
-        self.assertFalse(find_charm(CharmCeph, defaults))
-        self.assertFalse(find_charm(CharmCephOSD, defaults))
-
-        c.setopt('storage_backend', 'swift')
-        defaults = pc.gen_single()
-        self.assertTrue(find_charm(CharmSwiftProxy, defaults))
-        self.assertTrue(find_charm(CharmSwift, defaults))
-        self.assertFalse(find_charm(CharmCeph, defaults))
-        self.assertFalse(find_charm(CharmCephOSD, defaults))
-
-        c.setopt('storage_backend', 'ceph')
-        defaults = pc.gen_single()
-        self.assertFalse(find_charm(CharmSwiftProxy, defaults))
-        self.assertFalse(find_charm(CharmSwift, defaults))
-        self.assertTrue(find_charm(CharmCeph, defaults))
-        self.assertFalse(find_charm(CharmCephOSD, defaults))
