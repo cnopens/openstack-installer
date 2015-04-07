@@ -257,14 +257,6 @@ class PlacementControllerTestCase(unittest.TestCase):
         self.assertEqual(CharmState.REQUIRED,
                          self.pc.get_charm_state(CharmSwiftProxy)[0])
 
-    def test_swift_unrequired_then_required_swift_backend(self):
-        "Swift and swift-proxy are not optional with swift as the backend."
-        self.pc.assign(self.mock_machine, CharmSwift, AssignmentType.LXC)
-        self.assertEqual(CharmState.REQUIRED,
-                         self.pc.get_charm_state(CharmSwift)[0])
-        self.assertEqual(CharmState.REQUIRED,
-                         self.pc.get_charm_state(CharmSwiftProxy)[0])
-
     def test_swift_proxy_unrequired_then_required_default(self):
         "Swift and swift-proxy are both optional until you add swift-proxy"
         self.assertEqual(CharmState.OPTIONAL,
@@ -272,16 +264,6 @@ class PlacementControllerTestCase(unittest.TestCase):
         self.assertEqual(CharmState.OPTIONAL,
                          self.pc.get_charm_state(CharmSwiftProxy)[0])
 
-        self.pc.assign(self.mock_machine, CharmSwiftProxy, AssignmentType.LXC)
-        self.assertEqual(CharmState.REQUIRED,
-                         self.pc.get_charm_state(CharmSwift)[0])
-        # Only one swift-proxy is required, so now that we've added
-        # it, it is still not required:
-        self.assertEqual(CharmState.OPTIONAL,
-                         self.pc.get_charm_state(CharmSwiftProxy)[0])
-
-    def test_swift_proxy_unrequired_then_required_swift_backend(self):
-        "Swift and swift-proxy are not optional with swift as the backend"
         self.pc.assign(self.mock_machine, CharmSwiftProxy, AssignmentType.LXC)
         self.assertEqual(CharmState.REQUIRED,
                          self.pc.get_charm_state(CharmSwift)[0])
