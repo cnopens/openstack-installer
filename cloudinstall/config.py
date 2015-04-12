@@ -85,13 +85,14 @@ class Config:
         self._cfg_file = cfg_file
 
     def save(self):
-        """ Saves configuration """
+        """ Saves configuration
+        """
         try:
             heading = ("# This file is an auto generated configuration.\n"
                        "# It will not be read by subsequent runs.\n"
                        "# To re-use this config, make a copy\n"
-                       "# of this file and pass that file's name to the "
-                       "# --config flag.")
+                       "# of this file and pass that file's name\n"
+                       "# to the --config flag.")
             body = "{}\n{}".format(heading,
                                    yaml.safe_dump(self._config,
                                                   default_flow_style=False))

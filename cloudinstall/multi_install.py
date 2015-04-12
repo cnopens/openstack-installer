@@ -751,7 +751,7 @@ class LandscapeInstallFinal:
                  config, loop):
         self.config = config
         self.loop = loop
-        self.config.save()
+        # self.config.save()
         self.multi_installer = multi_installer
         self.display_controller = display_controller
         self.maas = None
