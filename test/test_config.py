@@ -20,7 +20,6 @@ import unittest
 import yaml
 import os.path as path
 import argparse
-from tempfile import NamedTemporaryFile
 
 from cloudinstall.config import Config
 import cloudinstall.utils as utils
@@ -30,7 +29,6 @@ log = logging.getLogger('cloudinstall.test_config')
 USER_DIR = path.expanduser('~')
 DATA_DIR = path.join(path.dirname(__file__), 'files')
 GOOD_CONFIG = yaml.load(utils.slurp(path.join(DATA_DIR, 'good_config.yaml')))
-BAD_CONFIG = yaml.load(utils.slurp(path.join(DATA_DIR, 'bad_config.yaml')))
 
 
 def parse_opts(argv):
@@ -62,41 +60,34 @@ def parse_opts(argv):
 class TestGoodConfig(unittest.TestCase):
 
     def setUp(self):
-        self._temp_conf = Config(GOOD_CONFIG)
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config(self._temp_conf._config, tempf.name)
+        self.conf = Config(GOOD_CONFIG)
 
-    def test_save_openstack_password(self):
-        """ Save openstack password to config """
+    def test_openstack_password(self):
+        """ Verify openstack password to config """
         self.conf.setopt('openstack_password', 'pass')
-        self.conf.save()
         self.assertEqual('pass', self.conf.getopt('openstack_password'))
 
-    def test_save_maas_creds(self):
-        """ Save maas credentials """
+    def test_maas_creds(self):
+        """ Verify maas credentials """
         self.conf.setopt('maascreds', dict(api_host='127.0.0.1',
                                            api_key='1234567'))
-        self.conf.save()
         self.assertEqual(
             '127.0.0.1', self.conf.getopt('maascreds')['api_host'])
 
     def test_save_landscape_creds(self):
-        """ Save landscape credentials """
+        """ Verify landscape credentials """
         self.conf.setopt('landscapecreds',
                          dict(admin_name='foo',
                               admin_email='foo@bar.com',
                               system_email='foo@bar.com',
                               maas_server='127.0.0.1',
                               maas_apikey='123457'))
-        self.conf.save()
         self.assertEqual(
             'foo@bar.com', self.conf.getopt('landscapecreds')['admin_email'])
 
-    def test_save_installer_type(self):
-        """ Save installer type """
+    def test_installer_type(self):
+        """ Verify installer type """
         self.conf.setopt("install_type", 'multi')
-        self.conf.save()
         self.assertEqual('multi', self.conf.getopt('install_type'))
 
     def test_cfg_path(self):
@@ -180,25 +171,3 @@ class TestGoodConfig(unittest.TestCase):
         """
         cfg = utils.populate_config(parse_opts([]))
         self.assertEqual(True, 'headless' not in cfg)
-
-
-@unittest.skip
-class TestBadConfig(unittest.TestCase):
-
-    def setUp(self):
-        self._temp_conf = Config(BAD_CONFIG)
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config(self._temp_conf._config, tempf.name)
-
-    def test_no_openstack_password(self):
-        """ No openstack password defined """
-        self.assertFalse(self.conf.getopt('openstack_password'))
-
-    def test_no_landscape_creds(self):
-        """ No landscape creds defined """
-        self.assertFalse(self.conf.getopt('landscapecreds'))
-
-    def test_no_installer_type(self):
-        """ No installer type defined """
-        self.assertFalse(self.conf.is_single)

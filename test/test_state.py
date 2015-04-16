@@ -20,7 +20,6 @@ import unittest
 from unittest.mock import MagicMock, patch
 from cloudinstall.state import InstallState, ControllerState
 from cloudinstall.config import Config
-from tempfile import NamedTemporaryFile
 
 log = logging.getLogger('cloudinstall.test_state')
 
@@ -28,9 +27,7 @@ log = logging.getLogger('cloudinstall.test_state')
 class InstallStateTestCase(unittest.TestCase):
 
     def setUp(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         self.bad_states_int = [5, 6, 7]
         self.good_states_int = [0, 1]
@@ -53,9 +50,7 @@ class InstallStateTestCase(unittest.TestCase):
 class ControllerStateTestCase(unittest.TestCase):
 
     def setUp(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         self.bad_states_int = [5, 6, 7]
         self.good_states_int = [0, 1, 2]
@@ -82,9 +77,7 @@ class MultiInstallStateTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
         self.mock_ui = MagicMock(name='ui')
 
     @patch('cloudinstall.multi_install.MultiInstall')
@@ -103,9 +96,7 @@ class CoreStateTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
         self.mock_ui = MagicMock(name='ui')
 
     @patch('cloudinstall.core.Controller')

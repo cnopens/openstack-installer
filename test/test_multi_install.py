@@ -20,15 +20,12 @@ from unittest.mock import MagicMock, patch, call
 
 from cloudinstall.multi_install import MultiInstall
 from cloudinstall.config import Config
-from tempfile import NamedTemporaryFile
 
 
 class MultiInstallTestCase(unittest.TestCase):
 
     def setUp(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         dc = MagicMock(name="display_controller")
         loop = MagicMock(name="loop")

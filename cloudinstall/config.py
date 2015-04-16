@@ -72,7 +72,7 @@ class Config:
          'white', 'dark gray')
     ]
 
-    def __init__(self, cfg_obj=None, cfg_file=None):
+    def __init__(self, cfg_obj=None):
         if os.getenv("FAKE_API_DATA"):
             self._juju_env = {"bootstrap-config": {'name': "fake",
                                                    'maas-server': "FAKE"}}
@@ -83,7 +83,6 @@ class Config:
             self._config = {}
         else:
             self._config = cfg_obj
-        self._cfg_file = cfg_file
         self.state = StateManager()
 
     def save(self):
@@ -131,10 +130,7 @@ class Config:
 
     @property
     def cfg_file(self):
-        if self._cfg_file is None:
-            return os.path.join(self.cfg_path, 'config.yaml')
-        else:
-            return self._cfg_file
+        return os.path.join(self.cfg_path, 'config.yaml')
 
     @property
     def bin_path(self):

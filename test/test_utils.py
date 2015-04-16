@@ -22,7 +22,6 @@ from jinja2 import Environment, FileSystemLoader
 import logging
 import os
 from subprocess import PIPE
-from tempfile import NamedTemporaryFile
 import unittest
 from unittest.mock import patch, PropertyMock
 import yaml
@@ -47,9 +46,7 @@ def source_tree_template_loader(name):
 class TestRenderCharmConfig(unittest.TestCase):
 
     def setUp(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.config = Config({}, tempf.name)
+        self.config = Config({})
 
         type(self.config).cfg_path = PropertyMock(return_value='fake_cfg_path')
         self.config.setopt('openstack_password', 'fake_pw')

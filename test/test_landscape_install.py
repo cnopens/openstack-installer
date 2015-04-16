@@ -23,7 +23,6 @@ from unittest.mock import ANY, MagicMock, patch, PropertyMock
 
 from cloudinstall.multi_install import LandscapeInstallFinal
 from cloudinstall.config import Config
-from tempfile import NamedTemporaryFile
 
 log = logging.getLogger('cloudinstall.test_landscape_install')
 
@@ -35,9 +34,7 @@ class LandscapeInstallFinalTestCase(unittest.TestCase):
         self.mock_multi_installer = MagicMock()
         self.mock_display_controller = MagicMock()
         self.loop = MagicMock()
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
     def make_installer_with_config(self, landscape_creds=None,
                                    maas_creds=None):

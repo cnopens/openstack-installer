@@ -752,7 +752,6 @@ class LandscapeInstallFinal:
                  config, loop):
         self.config = config
         self.loop = loop
-        # self.config.save()
         self.multi_installer = multi_installer
         self.display_controller = display_controller
         self.maas = None
@@ -790,7 +789,6 @@ class LandscapeInstallFinal:
         # running juju-deployer (adam.stokes)
         time.sleep(10)
 
-        # Set remaining permissions
         self.set_perms()
 
         try:

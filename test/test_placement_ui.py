@@ -20,11 +20,8 @@
 import logging
 import re
 import unittest
-import yaml
-from tempfile import NamedTemporaryFile
 from unittest.mock import MagicMock, patch
 
-import cloudinstall.utils as utils
 from cloudinstall.state import CharmState
 from cloudinstall.config import Config
 from cloudinstall.charms.jujugui import CharmJujuGui
@@ -78,9 +75,7 @@ class ServiceWidgetTestCase(unittest.TestCase):
     def setUp(self):
         self.mock_maas_state = MagicMock()
 
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            utils.spew(tempf.name, yaml.dump(dict()))
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         self.conf.setopt('storage_backend', 'none')
         self.pc = PlacementController(self.mock_maas_state,
@@ -174,9 +169,7 @@ class MachineWidgetTestCase(unittest.TestCase):
 
     def setUp(self):
         self.mock_maas_state = MagicMock()
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            utils.spew(tempf.name, yaml.dump(dict()))
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         self.pc = PlacementController(self.mock_maas_state,
                                       self.conf)
@@ -252,9 +245,7 @@ class MachinesListTestCase(unittest.TestCase):
 
     def setUp(self):
         self.mock_maas_state = MagicMock()
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            utils.spew(tempf.name, yaml.dump(dict()))
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         self.pc = PlacementController(self.mock_maas_state,
                                       self.conf)
@@ -322,9 +313,7 @@ class ServicesListTestCase(unittest.TestCase):
 
     def setUp(self):
         self.mock_maas_state = MagicMock()
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            utils.spew(tempf.name, yaml.dump(dict()))
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         self.conf.setopt('storage_backend', 'none')
         self.pc = PlacementController(self.mock_maas_state,

@@ -22,7 +22,7 @@ import os
 import unittest
 from unittest.mock import call, MagicMock, PropertyMock, patch
 import yaml
-from tempfile import NamedTemporaryFile, TemporaryFile
+from tempfile import TemporaryFile
 
 from cloudinstall.charms.keystone import CharmKeystone
 from cloudinstall.charms.compute import CharmNovaCompute
@@ -33,7 +33,6 @@ from cloudinstall.charms.ceph_osd import CharmCephOSD
 from cloudinstall.maas import MaasMachineStatus
 from cloudinstall.config import Config
 from cloudinstall.state import CharmState
-import cloudinstall.utils as utils
 
 from cloudinstall.placement.controller import (AssignmentType,
                                                PlacementController,
@@ -49,9 +48,7 @@ class PlacementControllerTestCase(unittest.TestCase):
 
     def setUp(self):
         self.mock_maas_state = MagicMock()
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            utils.spew(tempf.name, yaml.dump(dict()))
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
 
         self.conf.setopt('storage_backend', 'none')
         self.pc = PlacementController(self.mock_maas_state,
@@ -319,9 +316,7 @@ class PlacementControllerTestCase(unittest.TestCase):
         self.assertEqual(m2.constraints, {'cpu': 8})
 
     def test_load_machines_single(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            utils.spew(tempf.name, yaml.dump(dict()))
-            conf = Config({}, tempf.name)
+        conf = Config({})
 
         fake_assignments = {
             'fake_iid': {'constraints': {},

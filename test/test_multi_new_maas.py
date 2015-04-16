@@ -21,15 +21,12 @@ from unittest.mock import MagicMock, patch
 
 from cloudinstall.multi_install import MultiInstallNewMaas, MaasInstallError
 from cloudinstall.config import Config
-from tempfile import NamedTemporaryFile
 
 
 class MultiInstallNewMaasTestCase(unittest.TestCase):
 
     def setUp(self):
-        with NamedTemporaryFile(mode='w+', encoding='utf-8') as tempf:
-            # Override config file to save to
-            self.conf = Config({}, tempf.name)
+        self.conf = Config({})
         self.conf.setopt('openstack_password', 'ampersand&')
 
     def make_installer(self, loop=None, dc=None):
