@@ -45,7 +45,7 @@ class InstallController:
         self.ui = ui
         self.config = config
         self.loop = loop
-        self.config.setopt('current_state', InstallState.RUNNING.value)
+        self.config.state.setopt('current_state', InstallState.RUNNING.value)
         if not self.config.getopt('headless'):
             if self.config.getopt('openstack_release') == 'icehouse':
                 self.ui.set_openstack_rel("Icehouse (2014.1.3)")

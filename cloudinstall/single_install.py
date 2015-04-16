@@ -115,7 +115,7 @@ class SingleInstall:
                                                   'rootfs/etc/default/lxc-net')
 
         network = netutils.get_unique_lxc_network()
-        self.config.setopt('lxc_network', network)
+        self.config.state.setopt('lxc_network', network)
 
         nw = IPv4Network(network)
         addr = nw[1]
@@ -138,7 +138,7 @@ class SingleInstall:
         """
         # Store container IP in config
         ip = utils.container_ip(self.container_name)
-        self.config.setopt('container_ip', ip)
+        self.config.state.setopt('container_ip', ip)
 
         log.info("Adding static route for {} via {}".format(lxc_net,
                                                             ip))

@@ -16,6 +16,7 @@
 import os
 import yaml
 import cloudinstall.utils as utils
+from cloudinstall.state import StateManager
 import logging
 
 
@@ -83,6 +84,7 @@ class Config:
         else:
             self._config = cfg_obj
         self._cfg_file = cfg_file
+        self.state = StateManager()
 
     def save(self):
         """ Saves configuration
@@ -143,6 +145,10 @@ class Config:
     def placements_filename(self):
         return os.path.join(self.cfg_path, 'placements.yaml')
 
+    @property
+    def state_filename(self):
+        return os.path.join(self.cfg_path, 'state.yaml')
+
     def is_single(self):
         if self.getopt('install_type') and \
            'Single' in self.getopt('install_type'):
@@ -165,7 +171,6 @@ class Config:
         """ sets config option """
         try:
             self._config[key] = val
-            self.save()
         except Exception as e:
             log.error("Failed to set {} in config: {}".format(key, e))
 

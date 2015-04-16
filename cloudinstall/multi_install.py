@@ -100,7 +100,7 @@ class MultiInstall:
 
     def do_install(self):
         self.tasker.start_task("Bootstrapping Juju")
-        self.config.setopt('current_state', InstallState.RUNNING.value)
+        self.config.state.setopt('current_state', InstallState.RUNNING.value)
 
         maas_creds = self.config.getopt('maascreds')
         maas_env = utils.load_template('juju-env/maas.yaml')
@@ -270,7 +270,8 @@ class MultiInstallExistingMaas(MultiInstall):
             msg = "Waiting for sufficient resources in MAAS"
             self.display_controller.status_info_message(msg)
             self.display_controller.current_installer = self
-            self.config.setopt('current_state', InstallState.NODE_WAIT.value)
+            self.config.state.setopt(
+                'current_state', InstallState.NODE_WAIT.value)
             # return here and end thread. machine_wait_view will call
             # do_install back on new async thread
         else:

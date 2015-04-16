@@ -70,7 +70,8 @@ class Controller:
         self.juju_m_idmap = None  # for single, {instance_id: machine id}
         self.deployed_charm_classes = []
         self.placement_controller = None
-        self.config.setopt('current_state', ControllerState.INSTALL_WAIT.value)
+        self.config.state.setopt(
+            'current_state', ControllerState.INSTALL_WAIT.value)
 
     def update(self, *args, **kwargs):
         """Render UI according to current state and reset timer
@@ -179,7 +180,7 @@ class Controller:
 
         if self.config.getopt('edit_placement') or \
            not self.placement_controller.can_deploy():
-            self.config.setopt(
+            self.config.state.setopt(
                 'current_state', ControllerState.PLACEMENT.value)
         else:
             if self.config.getopt('headless'):
@@ -220,7 +221,8 @@ class Controller:
         self.initialize()
 
     def commit_placement(self):
-        self.config.setopt('current_state', ControllerState.SERVICES.value)
+        self.config.state.setopt(
+            'current_state', ControllerState.SERVICES.value)
         self.ui.render_services_view(self.nodes, self.juju_state,
                                      self.maas_state, self.config)
         self.loop.redraw_screen()
@@ -264,7 +266,8 @@ class Controller:
 
             time.sleep(1)
 
-        self.config.setopt('current_state', ControllerState.SERVICES.value)
+        self.config.state.setopt(
+            'current_state', ControllerState.SERVICES.value)
         if self.config.is_single():
             controller_machine = self.juju_m_idmap['controller']
             self.configure_lxc_network(controller_machine)

@@ -87,8 +87,9 @@ class UtilsException(Exception):
 
 def cleanup(cfg):
     # Save latest config object
-    log.info("Cleanup, saving latest config object.")
+    log.info("Cleanup, saving config and state objects.")
     cfg.save()
+    cfg.state.save(cfg.state_filename)
     pid = os.path.join(install_home(), '.cloud-install/openstack.pid')
     if os.path.isfile(pid):
         os.remove(pid)
