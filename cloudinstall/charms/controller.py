@@ -85,6 +85,17 @@ class CharmNovaCloudController(CharmBase):
                 p=openstack_password,
                 install_type=self.config.getopt('install_type')),
             juju_home=self.config.juju_home(use_expansion=True))
+        if self.config.getopt('use_lxd'):
+            import_lxd_script = os.path.join(
+                self.config.share_path, '/templates/import-lxd.sh')
+            utils.remote_cp(unit.machine_id, src=import_lxd_script,
+                            dest="/tmp/import-lxd.sh")
+            utils.remote_run(unit.machine_id,
+                             cmds="chmod +x /tmp/import-lxd.sh")
+            utils.remote_run(
+                unit.machine_id,
+                cmds="/tmp/import-lxd.sh",
+                juju_home=self.config.juju_home(use_expansion=True))
         if err['status'] != 0:
             # something happened during nova setup, re-run
             return True
