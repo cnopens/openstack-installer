@@ -264,13 +264,20 @@ def render_charm_config(config):
         install_type=config.getopt('install_type'),
         openstack_password=config.getopt('openstack_password'))
 
+    if config.getopt('use_lxd'):
+        template_args['use_lxd'] = config.getopt('use_lxd')
+
     if config.getopt('openstack_tip'):
         template_args['openstack_tip'] = config.getopt(
             'openstack_tip')
     template_args['openstack_release'] = config.getopt(
         'openstack_release')
-    openstack_origin = ("cloud:trusty-" +
-                        config.getopt('openstack_release'))
+
+    ubuntu_series = config.getopt('ubuntu_series')
+    openstack_release = config.getopt('openstack_release')
+    openstack_origin = ("cloud:{}-{}".format(ubuntu_series,
+                                             openstack_release))
+
     template_args['openstack_origin'] = openstack_origin
 
     if config.is_single():

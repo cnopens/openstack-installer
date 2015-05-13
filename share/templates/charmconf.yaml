@@ -148,6 +148,9 @@ nova-compute:
 {% if openstack_tip is defined %}
   openstack-origin-git: "{{ render_tip_repo('nova') }}"
 {% endif %}
+{%- if use_lxd is defined %}
+  virt-type: lxd
+{%- endif %}
 
 openstack-dashboard:
   openstack-origin: {{openstack_origin}}
