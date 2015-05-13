@@ -50,4 +50,12 @@ class CharmNovaCompute(CharmBase):
                                 AssignmentType.KVM]
     is_core = True
 
+    def deploy(self, mspec):
+        if not self.config.getopt('use_lxd'):
+            return super().deploy(mspec)
+        # TODO: Pull in from --series once that work is tested/completed.
+        self.bzr_get("lp:~openstack-charmers/charms/trusty/nova-compute",
+                     'vivid')
+        self.local_deploy(machine_spec, 'vivid')
+
 __charm_class__ = CharmNovaCompute
