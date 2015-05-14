@@ -14,6 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import os.path as path
+import yaml
+import cloudinstall.utils as utils
 from cloudinstall.charms import CharmBase, DisplayPriorities
 from cloudinstall.placement.controller import AssignmentType
 
@@ -50,12 +53,19 @@ class CharmNovaCompute(CharmBase):
                                 AssignmentType.KVM]
     is_core = True
 
+    @classmethod
+    def series_required(cls):
+        conf = path.join(utils.install_home(), '.cloud-install/config.yaml')
+        conf_yaml = yaml.load(utils.slurp(conf))
+        if conf_yaml['use_lxd']:
+            return 'vivid'
+        return 'trusty'
+
     def deploy(self, mspec):
         if not self.config.getopt('use_lxd'):
             return super().deploy(mspec)
-        # TODO: Pull in from --series once that work is tested/completed.
-        self.bzr_get("lp:~openstack-charmers/charms/trusty/nova-compute",
+        self.bzr_get("lp:charms/trusty/nova-compute",
                      'vivid')
-        self.local_deploy(machine_spec, 'vivid')
+        self.local_deploy(mspec, 'vivid')
 
 __charm_class__ = CharmNovaCompute
