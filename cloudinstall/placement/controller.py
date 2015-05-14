@@ -659,16 +659,10 @@ class PlacementController:
         if max_cpus >= 2:
             max_cpus = min(8, max_cpus // 2)
 
-        # FIXME: Remove once http://pad.lv/1442308 is fixed.
-        if self.config.getopt('use_lxd'):
-            series = 'vivid'
-        else:
-            series = 'trusty'
         controller = PlaceholderMachine('controller', 'controller',
                                         {'mem': 6144,
                                          'root-disk': 20480,
-                                         'cpu-cores': max_cpus},
-                                        series)
+                                         'cpu-cores': max_cpus})
         self._machines.append(controller)
 
         charm_name_counter = Counter()
