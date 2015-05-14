@@ -50,11 +50,12 @@ class PlaceholderMachine:
     expecting MAAS machines.
     """
 
-    def __init__(self, instance_id, name, constraints=None):
+    def __init__(self, instance_id, name, constraints=None, series="trusty"):
         self.instance_id = instance_id
         self.system_id = instance_id
         self.machine_id = -1
         self.display_name = name
+        self.series = series
         def_cons = {'arch': '?',
                     'cpu_count': 0,
                     'cpu_cores': 0,
@@ -676,7 +677,8 @@ class PlacementController:
                                                 charm_class.display_name)
 
             return PlaceholderMachine(instance_id, m_name,
-                                      charm_class.constraints)
+                                      charm_class.constraints,
+                                      charm_class.series_required())
 
         for charm_class in self.charm_classes():
             state, _, _ = self.get_charm_state(charm_class)

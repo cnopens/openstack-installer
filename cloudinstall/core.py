@@ -404,7 +404,7 @@ class Controller:
                           "skipping".format(machine.instance_id,
                                             machine.machine_id))
                 continue
-            machine_series = machine.series_required()
+            machine_series = machine.series
             log.debug("adding machine with "
                       "constraints={}, series={}".format(
                           machine.constraints, machine_series))

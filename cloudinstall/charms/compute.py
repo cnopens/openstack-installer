@@ -57,6 +57,7 @@ class CharmNovaCompute(CharmBase):
     def series_required(cls):
         conf = path.join(utils.install_home(), '.cloud-install/config.yaml')
         conf_yaml = yaml.load(utils.slurp(conf))
+        log.debug("compute: {}".format(conf_yaml))
         if conf_yaml['use_lxd']:
             return 'vivid'
         return 'trusty'
