@@ -22,9 +22,11 @@ class CharmHorizon(CharmBase):
 
     charm_name = 'openstack-dashboard'
     charm_rev = 14
+    charm_branch = "lp:~openstack-charmers/charms/trusty/openstack-dashboard"
     display_name = 'Openstack Dashboard'
     related = [('keystone:identity-service',
                 'openstack-dashboard:identity-service')]
     is_core = True
+    have_nextbranch = True
 
 __charm_class__ = CharmHorizon

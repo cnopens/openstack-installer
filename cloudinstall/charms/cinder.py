@@ -27,6 +27,7 @@ class CharmCinder(CharmBase):
 
     charm_name = 'cinder'
     charm_rev = 23
+    charm_branch = "lp:~openstack-charmers/charms/trusty/cinder"
     display_name = 'Cinder'
     related = [('cinder:image-service', 'glance:image-service'),
                ('cinder:storage-backend',
@@ -41,5 +42,6 @@ class CharmCinder(CharmBase):
 
     allowed_assignment_types = [AssignmentType.BareMetal,
                                 AssignmentType.KVM]
+    have_nextbranch = True
 
 __charm_class__ = CharmCinder

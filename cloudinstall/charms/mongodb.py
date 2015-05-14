@@ -23,6 +23,7 @@ class CharmMongo(CharmBase):
 
     charm_name = 'mongodb'
     charm_rev = 18
+    charm_branch = "lp:charms/trusty/mongodb"
     display_name = 'MongoDB'
     deploy_priority = 0
     contrib = True

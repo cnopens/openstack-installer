@@ -22,6 +22,7 @@ class CharmMysql(CharmBase):
 
     charm_name = 'mysql'
     charm_rev = 25
+    charm_branch = "lp:charms/trusty/mysql"
     display_name = 'MySQL'
     deploy_priority = 0
     is_core = True

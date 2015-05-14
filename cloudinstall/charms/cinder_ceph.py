@@ -26,9 +26,11 @@ class CharmCinderCeph(CharmBase):
 
     charm_name = 'cinder-ceph'
     charm_rev = 7
+    charm_branch = "lp:~openstack-charmers/charms/trusty/cinder-ceph"
     display_name = 'Cinder-Ceph'
     deploy_priority = 5
     subordinate = True
     depends = ['ceph', 'cinder']
+    have_nextbranch = True
 
 __charm_class__ = CharmCinderCeph

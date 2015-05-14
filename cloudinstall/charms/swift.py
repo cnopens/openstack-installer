@@ -26,6 +26,7 @@ class CharmSwift(CharmBase):
 
     charm_name = 'swift-storage'
     charm_rev = 15
+    charm_branch = "lp:~openstack-charmers/charms/trusty/swift-storage"
     display_name = 'Swift'
     display_priority = DisplayPriorities.Storage
     related = [('swift-proxy:swift-storage', 'swift-storage:swift-storage')]
@@ -35,6 +36,7 @@ class CharmSwift(CharmBase):
     allow_multi_units = True
     conflicts = ['ceph-radosgw']
     depends = ['swift-proxy']
+    have_nextbranch = True
 
     @classmethod
     def required_num_units(self):

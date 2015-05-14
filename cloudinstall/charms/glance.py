@@ -22,10 +22,12 @@ class CharmGlance(CharmBase):
 
     charm_name = 'glance'
     charm_rev = 20
+    charm_branch = "lp:~openstack-charmers/charms/trusty/glance"
     display_name = 'Glance'
     related = [('mysql:shared-db', 'glance:shared-db'),
                ('keystone:identity-service', 'glance:identity-service'),
                ('rabbitmq-server:amqp', 'glance:amqp')]
     is_core = True
+    have_nextbranch = True
 
 __charm_class__ = CharmGlance

@@ -22,10 +22,12 @@ class CharmRabbitMQ(CharmBase):
 
     charm_name = 'rabbitmq-server'
     charm_rev = 32
+    charm_branch = "lp:~openstack-charmers/charms/trusty/rabbitmq-server"
     display_name = 'RabbitMQ Server'
     deploy_priority = 1
     related = [('rabbitmq-server:amqp',
                 'neutron-openvswitch:amqp')]
     is_core = True
+    have_nextbranch = True
 
 __charm_class__ = CharmRabbitMQ

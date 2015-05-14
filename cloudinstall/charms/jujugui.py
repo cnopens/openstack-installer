@@ -21,6 +21,7 @@ class CharmJujuGui(CharmBase):
 
     charm_name = 'juju-gui'
     charm_rev = 27
+    charm_branch = "lp:charms/trusty/juju-gui"
     display_name = 'Juju GUI'
     display_priority = DisplayPriorities.Other
     deploy_priority = 1

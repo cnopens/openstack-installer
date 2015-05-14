@@ -26,6 +26,7 @@ class CharmNtp(CharmBase):
 
     charm_name = 'ntp'
     charm_rev = 8
+    charm_branch = "lp:charms/trusty/ntp"
     display_name = 'NTP'
     subordinate = True
     deploy_priority = 0

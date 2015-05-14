@@ -27,6 +27,7 @@ class CharmNovaCloudController(CharmBase):
 
     charm_name = 'nova-cloud-controller'
     charm_rev = 56
+    charm_branch = "lp:~openstack-charmers/charms/trusty/nova-cloud-controller"
     display_name = 'Controller'
     deploy_priority = 2
     related = [('nova-cloud-controller:shared-db',
@@ -39,6 +40,7 @@ class CharmNovaCloudController(CharmBase):
                 'nova-cloud-controller:identity-service')]
     allow_multi_units = False
     is_core = True
+    have_nextbranch = True
 
     def post_proc(self):
         """ post processing for nova-cloud-controller """

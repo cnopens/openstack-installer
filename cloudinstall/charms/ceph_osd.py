@@ -26,11 +26,13 @@ class CharmCephOSD(CharmBase):
 
     charm_name = 'ceph-osd'
     charm_rev = 10
+    charm_branch = "lp:~openstack-charmers/charms/trusty/ceph-osd"
     display_name = 'Ceph OSD'
     allow_multi_units = True
     related = [('ceph:osd', 'ceph-osd:mon'),
                ('ntp:juju-info', 'ceph-osd:juju-info')]
     depends = ['ntp', 'ceph']
     isolate = True
+    have_nextbranch = True
 
 __charm_class__ = CharmCephOSD

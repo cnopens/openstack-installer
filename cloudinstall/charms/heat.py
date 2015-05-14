@@ -23,6 +23,7 @@ class CharmHeat(CharmBase):
 
     charm_name = 'heat'
     charm_rev = 7
+    charm_branch = "lp:~openstack-charmers/charms/trusty/heat"
     display_name = 'Heat'
     related = [('keystone:identity-service',
                 'heat:identity-service'),
@@ -31,5 +32,6 @@ class CharmHeat(CharmBase):
                ('rabbitmq-server:amqp',
                 'heat:amqp')]
     contrib = True
+    have_nextbranch = True
 
 __charm_class__ = CharmHeat

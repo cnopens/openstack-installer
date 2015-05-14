@@ -26,6 +26,7 @@ class CharmCeilometer(CharmBase):
 
     charm_name = 'ceilometer'
     charm_rev = 9
+    charm_branch = "lp:~openstack-charmers/charms/trusty/ceilometer"
     display_name = 'Ceilometer'
     deploy_priority = 100
     contrib = True
@@ -38,5 +39,6 @@ class CharmCeilometer(CharmBase):
                ('ceilometer:ceilometer-service',
                 'ceilometer-agent:ceilometer-service')]
     depends = ['ceilometer-agent', 'mongodb']
+    have_nextbranch = True
 
 __charm_class__ = CharmCeilometer

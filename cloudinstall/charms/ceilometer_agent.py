@@ -26,10 +26,12 @@ class CharmCeilometerAgent(CharmBase):
 
     charm_name = 'ceilometer-agent'
     charm_rev = 6
+    charm_branch = "lp:~openstack-charmers/charms/trusty/ceilometer-agent"
     display_name = 'Ceilometer-Agent'
     subordinate = True
     contrib = True
     deploy_priority = 0
     depends = ['ceilometer']
+    have_nextbranch = True
 
 __charm_class__ = CharmCeilometerAgent

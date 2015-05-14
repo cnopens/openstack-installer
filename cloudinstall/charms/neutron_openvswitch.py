@@ -24,9 +24,11 @@ class CharmNeutronOpenvswitch(CharmBase):
 
     charm_name = 'neutron-openvswitch'
     charm_rev = 7
+    charm_branch = "lp:~openstack-charmers/charms/trusty/neutron-openvswitch"
     display_name = 'Neutron OpenVSwitch'
     subordinate = True
     openstack_release_min = 'j'
     is_core = True
+    have_nextbranch = True
 
 __charm_class__ = CharmNeutronOpenvswitch

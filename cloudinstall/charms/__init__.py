@@ -94,6 +94,7 @@ class CharmBase:
 
     charm_name = None
     charm_rev = None
+    charm_branch = None
     display_name = None
     related = []
     isolate = False
@@ -109,6 +110,7 @@ class CharmBase:
     conflicts = []
     is_core = False
     contrib = False
+    have_nextbranch = False
 
     def __init__(self, config, ui, juju, juju_state,
                  machine=None):
@@ -222,20 +224,16 @@ export OS_REGION_NAME=RegionOne
         if self.charm_rev:
             _charm_name_rev = "{}-{}".format(self.charm_name, self.charm_rev)
 
-        have_nextbranch = ['heat', 'nova-cloud-controller',
-                           'swift-proxy', 'rabbitmq-server', 'ceph',
-                           'swift-storage', 'ceilometer',
-                           'ceilometer-agent', 'cinder-ceph',
-                           'quantum-gateway', 'openstack-dashboard',
-                           'neutron-openvswitch', 'neutron-api',
-                           'keystone', 'glance', 'cinder',
-                           'nova-compute', 'ceph-osd', 'ceph-radosgw']
-
-        if self.config.getopt('next_charms') and \
-           self.charm_name in have_nextbranch:
+        if self.config.getopt('next_charms') and self.have_nextbranch:
             self.bzr_get("lp:~openstack-charmers/charms/trusty/{}"
                          "/next".format(self.charm_name))
             self.local_deploy(machine_spec)
+            return False
+        # FIXME: Maybe this is where it makes sense to have a --series arg.
+        # see GH573
+        if self.config.getopt('use_lxd'):
+            self.bzr_get(self.charm_branch, 'vivid')
+            self.local_deploy(machine_spec, 'vivid')
             return False
 
         if self.subordinate:

@@ -29,6 +29,7 @@ class CharmNovaCompute(CharmBase):
 
     charm_name = 'nova-compute'
     charm_rev = 24
+    charm_branch = "lp:~openstack-charmers/charms/trusty/nova-compute"
     display_name = 'Compute'
     display_priority = DisplayPriorities.Compute
     related = [('nova-compute:neutron-plugin',
@@ -52,20 +53,18 @@ class CharmNovaCompute(CharmBase):
     allowed_assignment_types = [AssignmentType.BareMetal,
                                 AssignmentType.KVM]
     is_core = True
+    have_nextbranch = True
 
     @classmethod
     def series_required(cls):
         conf = path.join(utils.install_home(), '.cloud-install/config.yaml')
         conf_yaml = yaml.load(utils.slurp(conf))
         if conf_yaml['use_lxd']:
+            # No need to keep this separate as we aren't nesting
+            # KVM at this point
+            cls.isolate = False
             return 'vivid'
         return 'trusty'
 
-    def deploy(self, mspec):
-        if not self.config.getopt('use_lxd'):
-            return super().deploy(mspec)
-        self.bzr_get("lp:charms/trusty/nova-compute",
-                     'vivid')
-        self.local_deploy(mspec, 'vivid')
 
 __charm_class__ = CharmNovaCompute

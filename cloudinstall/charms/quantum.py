@@ -28,6 +28,7 @@ class CharmQuantum(CharmBase):
 
     charm_name = 'quantum-gateway'
     charm_rev = 16
+    charm_branch = "lp:~openstack-charmers/charms/trusty/quantum-gateway"
     # TODO: Charms are still called quantum, we want to display
     # them as Neutron
     display_name = 'Neutron'
@@ -43,6 +44,7 @@ class CharmQuantum(CharmBase):
     allowed_assignment_types = [AssignmentType.BareMetal,
                                 AssignmentType.KVM]
     is_core = True
+    have_nextbranch = True
 
     def post_proc(self):
         """ performs additional network configuration for charm """

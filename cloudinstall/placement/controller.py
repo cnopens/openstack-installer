@@ -681,6 +681,8 @@ class PlacementController:
                                       charm_class.series_required())
 
         for charm_class in self.charm_classes():
+            # FIXME: stupid
+            charm_class.series_required()
             state, _, _ = self.get_charm_state(charm_class)
             if state != CharmState.REQUIRED:
                 continue
