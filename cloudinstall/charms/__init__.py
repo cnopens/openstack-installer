@@ -127,7 +127,6 @@ class CharmBase:
 
     @classmethod
     def series_required(cls):
-        log.debug("series select: trusty")
         return "trusty"
 
     def _openstack_env(self, user, password, tenant, auth_url):

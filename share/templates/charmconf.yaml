@@ -144,13 +144,15 @@ nova-cloud-controller:
 {% endif %}
 
 nova-compute:
+{%- if use_lxd is defined %}
+  openstack-origin: cloud:vivid-kilo
+  virt-type: lxd
+{%- else %}
   openstack-origin: {{openstack_origin}}
+{%- endif %}
 {% if openstack_tip is defined %}
   openstack-origin-git: "{{ render_tip_repo('nova') }}"
 {% endif %}
-{%- if use_lxd is defined %}
-  virt-type: lxd
-{%- endif %}
 
 openstack-dashboard:
   openstack-origin: {{openstack_origin}}

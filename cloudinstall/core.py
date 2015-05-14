@@ -404,12 +404,11 @@ class Controller:
                           "skipping".format(machine.instance_id,
                                             machine.machine_id))
                 continue
-            machine_series = machine.series
             log.debug("adding machine with "
                       "constraints={}, series={}".format(
-                          machine.constraints, machine_series))
+                          machine.constraints, machine.series))
 
-            rv = self.juju.add_machine(series=machine_series,
+            rv = self.juju.add_machine(series=machine.series,
                                        constraints=machine.constraints)
             m_id = get_created_machine_id(machine.instance_id, rv)
             machine.machine_id = m_id
