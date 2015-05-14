@@ -29,7 +29,7 @@ class CharmNovaCompute(CharmBase):
 
     charm_name = 'nova-compute'
     charm_rev = 24
-    charm_branch = "lp:~openstack-charmers/charms/trusty/nova-compute"
+    charm_branch = "lp:charms/trusty/nova-compute"
     display_name = 'Compute'
     display_priority = DisplayPriorities.Compute
     related = [('nova-compute:neutron-plugin',
@@ -60,9 +60,6 @@ class CharmNovaCompute(CharmBase):
         conf = path.join(utils.install_home(), '.cloud-install/config.yaml')
         conf_yaml = yaml.load(utils.slurp(conf))
         if conf_yaml['use_lxd']:
-            # No need to keep this separate as we aren't nesting
-            # KVM at this point
-            cls.isolate = False
             return 'vivid'
         return 'trusty'
 

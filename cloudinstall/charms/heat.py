@@ -23,7 +23,7 @@ class CharmHeat(CharmBase):
 
     charm_name = 'heat'
     charm_rev = 7
-    charm_branch = "lp:~openstack-charmers/charms/trusty/heat"
+    charm_branch = "lp:charms/trusty/heat"
     display_name = 'Heat'
     related = [('keystone:identity-service',
                 'heat:identity-service'),

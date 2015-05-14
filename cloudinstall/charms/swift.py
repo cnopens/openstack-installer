@@ -26,7 +26,7 @@ class CharmSwift(CharmBase):
 
     charm_name = 'swift-storage'
     charm_rev = 15
-    charm_branch = "lp:~openstack-charmers/charms/trusty/swift-storage"
+    charm_branch = "lp:charms/trusty/swift-storage"
     display_name = 'Swift'
     display_priority = DisplayPriorities.Storage
     related = [('swift-proxy:swift-storage', 'swift-storage:swift-storage')]

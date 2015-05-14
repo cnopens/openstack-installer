@@ -26,7 +26,7 @@ class CharmCeilometer(CharmBase):
 
     charm_name = 'ceilometer'
     charm_rev = 9
-    charm_branch = "lp:~openstack-charmers/charms/trusty/ceilometer"
+    charm_branch = "lp:charms/trusty/ceilometer"
     display_name = 'Ceilometer'
     deploy_priority = 100
     contrib = True

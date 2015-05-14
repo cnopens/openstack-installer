@@ -145,7 +145,6 @@ nova-cloud-controller:
 
 nova-compute:
 {%- if use_lxd is defined %}
-  openstack-origin: cloud:vivid-kilo
   virt-type: lxd
 {%- else %}
   openstack-origin: {{openstack_origin}}

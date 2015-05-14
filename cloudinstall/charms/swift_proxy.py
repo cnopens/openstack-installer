@@ -22,7 +22,7 @@ class CharmSwiftProxy(CharmBase):
 
     charm_name = 'swift-proxy'
     charm_rev = 17
-    charm_branch = "lp:~openstack-charmers/charms/trusty/swift-proxy"
+    charm_branch = "lp:charms/trusty/swift-proxy"
     display_name = 'Swift Proxy'
     display_priority = DisplayPriorities.Storage
     related = [

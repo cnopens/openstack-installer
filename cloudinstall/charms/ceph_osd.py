@@ -26,7 +26,7 @@ class CharmCephOSD(CharmBase):
 
     charm_name = 'ceph-osd'
     charm_rev = 10
-    charm_branch = "lp:~openstack-charmers/charms/trusty/ceph-osd"
+    charm_branch = "lp:charms/trusty/ceph-osd"
     display_name = 'Ceph OSD'
     allow_multi_units = True
     related = [('ceph:osd', 'ceph-osd:mon'),

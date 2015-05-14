@@ -26,7 +26,7 @@ class CharmCephRadosGw(CharmBase):
 
     charm_name = 'ceph-radosgw'
     charm_rev = 12
-    charm_branch = "lp:~openstack-charmers/charms/trusty/ceph-radosgw"
+    charm_branch = "lp:charms/trusty/ceph-radosgw"
     display_name = 'Ceph RADOS Gateway'
     related = [('ceph:radosgw', 'ceph-radosgw:mon'),
                ('ceph-radosgw:identity-service',

@@ -27,7 +27,7 @@ class CharmNovaCloudController(CharmBase):
 
     charm_name = 'nova-cloud-controller'
     charm_rev = 56
-    charm_branch = "lp:~openstack-charmers/charms/trusty/nova-cloud-controller"
+    charm_branch = "lp:charms/trusty/nova-cloud-controller"
     display_name = 'Controller'
     deploy_priority = 2
     related = [('nova-cloud-controller:shared-db',

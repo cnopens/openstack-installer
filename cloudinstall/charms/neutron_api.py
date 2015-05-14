@@ -24,7 +24,7 @@ class CharmNeutronAPI(CharmBase):
 
     charm_name = 'neutron-api'
     charm_rev = 14
-    charm_branch = "lp:~openstack-charmers/charms/trusty/neutron-api"
+    charm_branch = "lp:charms/trusty/neutron-api"
     display_name = 'Neutron API'
     openstack_release_min = 'j'
     related = [('neutron-api:identity-service',

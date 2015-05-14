@@ -27,7 +27,7 @@ class CharmCinder(CharmBase):
 
     charm_name = 'cinder'
     charm_rev = 23
-    charm_branch = "lp:~openstack-charmers/charms/trusty/cinder"
+    charm_branch = "lp:charms/trusty/cinder"
     display_name = 'Cinder'
     related = [('cinder:image-service', 'glance:image-service'),
                ('cinder:storage-backend',

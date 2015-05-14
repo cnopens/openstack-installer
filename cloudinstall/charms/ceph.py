@@ -26,7 +26,7 @@ class CharmCeph(CharmBase):
 
     charm_name = 'ceph'
     charm_rev = 36
-    charm_branch = "lp:~openstack-charmers/charms/trusty/ceph"
+    charm_branch = "lp:charms/trusty/ceph"
     display_name = 'Ceph'
     display_priority = DisplayPriorities.Storage
     related = [('ceph:client', 'cinder-ceph:ceph'),
