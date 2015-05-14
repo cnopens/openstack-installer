@@ -125,6 +125,10 @@ class CharmBase:
         self.ui = ui
         self.config = config
 
+    @classmethod
+    def series_required(cls):
+        return "trusty"
+
     def _openstack_env(self, user, password, tenant, auth_url):
         """ setup openstack environment vars """
         return """export OS_USERNAME={user}
